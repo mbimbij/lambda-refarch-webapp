@@ -45,6 +45,10 @@ function getCognitoUsername(event){
 function deleteRecordById(username, recordId) {
     let params = {
         TableName: TABLE_NAME,
+        Key:{
+          "cognito-username": username,
+          "id": recordId
+        },
         KeyConditionExpression: "#username = :username",
         ExpressionAttributeNames:{
             "#username": "cognito-username"
@@ -60,7 +64,7 @@ function deleteRecordById(username, recordId) {
 // Lambda Handler
 exports.deleteToDoItem =
     metricScope(metrics =>
-        async (event, context, callback) => {
+docClient        async (event, context, callback) => {
             metrics.setNamespace('TodoApp')
             metrics.putDimensions({ Service: "deleteTodo" })
             metrics.setProperty("RequestId", context.requestId)
